@@ -1,5 +1,5 @@
 <!-- create.component.html -->
-<div class="row d-flex justify-content-center">
+<div class="row d-flex justify-content-center flex-column align-items-center">
   <div class="card">
     <h1 class="justify-content-center">Create account</h1>
     <br />
@@ -7,7 +7,8 @@
       <div class="form-outline mb-4">
         <label class="form-label" for="form2Example1">Email *</label>
         <input type="email" class="form-control" [class.is-invalid]="registerForm.controls.email.errors && submitted"
-          formControlName="email" />
+          formControlName="email" aria-describedby="emailHelp" />
+        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
 
         <!-- Mensajes de error -->
         <div *ngIf="registerForm.controls.email.errors && submitted" class="invalid-feedback">
@@ -19,53 +20,52 @@
           </div>
         </div>
       </div>
-
+      <!-- Validación contraseña -->
       <div class="form-outline mb-4">
         <label class="form-label">Password *</label>
-        <div class="row">
-          <div class="col-11">
-            <input [type]="hidePassword ? 'password' : 'text'"
-              [class.border-danger]="registerForm.controls.password.errors" formControlName="password"
-              class="form-control" type="password" />
+        <div class="input-group">
+          <input [type]="hidePassword ? 'password' : 'text'" class="form-control"
+            [class.is-invalid]="registerForm.controls.password.errors && submitted" formControlName="password" />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" (click)="hidePassword = !hidePassword">
+              <i [ngClass]="{'bi bi-eye-slash': hidePassword, 'bi bi-eye': !hidePassword}"></i>
+            </button>
           </div>
-          <div class="col-1 icono">
-            <i [ngClass]="{'bi bi-eye-slash': hidePassword,
-            'bi bi-eye': !hidePassword}" (click)="hidePassword = !hidePassword"></i>
+          <div *ngIf="registerForm.controls.password.errors && submitted" class="invalid-feedback">
+            <div *ngIf="registerForm.controls.password.getError('onlyNumbers')">
+              - Only numeric characters are allowed
+            </div>
+            <div *ngIf="registerForm.controls.password.getError('minlength')">
+              - Minimum 8 characters
+            </div>
+            <div *ngIf="registerForm.controls.password.getError('required')">
+              - The field is required
+            </div>
           </div>
-        </div>
-
-        <div *ngIf="registerForm.controls.password.getError('onlyNumbers')" class="requisito">
-          - Only numeric characters are allowed
-        </div>
-        <div *ngIf="registerForm.controls.password.getError('minlength') ||
-            !registerForm.controls.password.value" class="requisito">
-          - Minimum 8 characters
-        </div>
-        <div *ngIf="registerForm.controls.password.getError('required')" class="requisito">
-          - The field is required
         </div>
       </div>
-
+      <!-- Validación confirmar contraseña -->
       <div class="form-outline mb-4">
         <label class="form-label">Confirm password *</label>
-        <div class="row">
-          <div class="col-11">
-            <input [type]="hidePasswordConfirmation ? 'password' : 'text'"
-              [class.border-danger]="registerForm.errors || registerForm.controls.passwordConfirmation.errors"
-              formControlName="passwordConfirmation" class="form-control" />
+        <div class="input-group">
+          <input [type]="hidePasswordConfirmation ? 'password' : 'text'" class="form-control"
+            [class.is-invalid]="(registerForm.controls.passwordConfirmation.errors || registerForm.errors) && submitted"
+            formControlName="passwordConfirmation" />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button"
+              (click)="hidePasswordConfirmation = !hidePasswordConfirmation">
+              <i [ngClass]="{'bi bi-eye-slash': hidePasswordConfirmation, 'bi bi-eye': !hidePasswordConfirmation}"></i>
+            </button>
           </div>
-          <div class="col-1 icono">
-            <i [ngClass]="{'bi bi-eye-slash': hidePasswordConfirmation,
-            'bi bi-eye': !hidePasswordConfirmation}"
-              (click)="hidePasswordConfirmation = !hidePasswordConfirmation"></i>
+          <div *ngIf="(registerForm.controls.passwordConfirmation.errors || registerForm.errors) && submitted"
+            class="invalid-feedback">
+            <div *ngIf="registerForm.controls.passwordConfirmation.getError('required')">
+              - The field is required
+            </div>
+            <div *ngIf="registerForm.getError('mustBeEqual')">
+              - The passwords must be equal
+            </div>
           </div>
-        </div>
-
-        <div *ngIf="registerForm.controls.passwordConfirmation.getError('required')" class="requisito">
-          - The field is required
-        </div>
-        <div *ngIf="registerForm.getError('mustBeEqual')" class="requisito">
-          - The field is required
         </div>
       </div>
 
@@ -73,7 +73,10 @@
         Registrar
       </button>
     </form>
-    <div class="users-list">
+
+  </div>
+  <div class="registred-users">
+    <div class="users-list" *ngIf="formSubmittedSuccessfully">
       <h2>Registered Users:</h2>
       <ul>
         <li *ngFor="let user of registredUsers">

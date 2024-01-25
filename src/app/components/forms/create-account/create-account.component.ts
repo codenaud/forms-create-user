@@ -50,17 +50,21 @@ export class CreateAccountComponent {
 
   constructor(private formBuilder: FormBuilder) {}
 
+  // verifica que el usuario se ha enviado con exito antes de mostrar el user.
+  formSubmittedSuccessfully = false;
+
   addUser() {
     this.submitted = true;
     if (this.registerForm.valid) {
-      const newUser: User = {
+      this.registredUsers.push({
         email: this.registerForm.value.email!,
         password: this.registerForm.value.password!,
         passwordConfirmation: this.registerForm.value.passwordConfirmation!,
-      };
-      this.registredUsers.push(newUser);
-      this.registerForm.reset();
+      });
+      this.formSubmittedSuccessfully = true; // Se establece en true solo cuando el formulario es válido y se añade un usuario
+      this.registerForm.reset(); // Reiniciar el formulario
       this.submitted = false;
     }
+    // No restablecer formSubmittedSuccessfully a false aquí
   }
 }
