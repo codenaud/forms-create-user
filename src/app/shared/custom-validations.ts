@@ -5,11 +5,22 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 
+/**
+ * * primero creamos la clase 'CustomValidators' que se estiende de la clase 'Validators' que nos ofrece Angular por defecto, de esta forma vamos a tener sus propiedades y sus métodos.
+ * * creamos validación estática onlyNumbers que recibe como parámetro el 'control' y va a retornar el 'error' comparando antes si se cumple el regex (solo números)
+ */
+
+/** este código nos dice: que el valor del control que se esta escribiendo cumple con la regex
+ *  si se cumple, no vamos a enviar nada, si no se cumple enviaremos el objeto onlyNumbers
+ *  */
 export class CustomValidators extends Validators {
   static onlyNumbers(control: AbstractControl): ValidationErrors | null {
     return /^\d+$/.test(control.value) ? null : { onlyNumbers: true };
   }
 
+  /** En mustBeEqual, recibimos como parámetros los nombre de los 2 controles (definidos en create.account.components.ts => 'password' & 'passwordConfirmation').
+   *  si se cumple, no vamos a enviar nada, si no se cumple enviaremos el objeto onlyNumbers
+   *  */
   static mustBeEqual(
     nameFirstControl: string,
     nameSecondControl: string

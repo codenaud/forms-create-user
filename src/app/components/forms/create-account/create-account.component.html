@@ -3,12 +3,25 @@
   <div class="card">
     <h1 class="justify-content-center">Create account</h1>
     <br />
+
+    <!-- Aquí se define el formulario con un FormGroup llamado registerForm.
+       - El [formGroup] es una directiva de Angular que vincula el formulario en la plantilla con el FormGroup definido en tu componente TypeScript(create-account-component.ts).
+       - (ngSubmit) es un evento que se dispara cuando se envía el formulario, llamando al método addUser(). -->
+
     <form [formGroup]="registerForm" (ngSubmit)="addUser()">
       <div class="form-outline mb-4">
         <label class="form-label" for="form2Example1">Email *</label>
+
         <input type="email" class="form-control" [class.is-invalid]="registerForm.controls.email.errors && submitted"
           formControlName="email" aria-describedby="emailHelp" />
         <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+
+        <!-- El input define un campo de entrada para el correo electrónico.
+           - type="email" especifica que es un campo de correo electrónico, lo que permite la validación de formato de email del navegador.
+           - [class.is-invalid] aplica la clase de Bootstrap is-invalid si hay errores en el campo de correo electrónico y si el formulario ha sido enviado (submitted).
+           - formControlName="email" asocia este campo de entrada con el control email en tu FormGroup.
+          aria-describedby proporciona una descripción accesible para los usuarios de lectores de pantalla.
+           - <div id="emailHelp"> es un texto de ayuda para el usuario. -->
 
         <!-- Mensajes de error -->
         <div *ngIf="registerForm.controls.email.errors && submitted" class="invalid-feedback">
@@ -20,17 +33,36 @@
           </div>
         </div>
       </div>
+
+      <!-- Este bloque muestra mensajes de error para el campo de correo electrónico.
+         - *ngIf="registerForm.controls.email.errors && submitted" se asegura de que los mensajes de error solo se muestren si hay errores y si el formulario ha sido enviado.
+         - registerForm.controls.email.getError('required') y registerForm.controls.email.getError('email') verifican si hay errores específicos (required y email) y muestran los mensajes correspondientes. -->
+
       <!-- Validación contraseña -->
       <div class="form-outline mb-4">
         <label class="form-label">Password *</label>
         <div class="input-group">
           <input [type]="hidePassword ? 'password' : 'text'" class="form-control"
             [class.is-invalid]="registerForm.controls.password.errors && submitted" formControlName="password" />
+
+          <!-- Este es un campo de entrada para la contraseña.
+             - [type]="hidePassword ? 'password' : 'text'" cambia el tipo de entrada entre password (oculta) y text (visible), dependiendo del valor de la variable hidePassword.
+             - [class.is-invalid] aplica la clase de Bootstrap is-invalid si hay errores en el campo de contraseña y si el formulario ha sido enviado (submitted).
+             - formControlName="password" vincula este campo con el control password en tu FormGroup.
+           -->
+
+
           <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" (click)="hidePassword = !hidePassword">
               <i [ngClass]="{'bi bi-eye-slash': hidePassword, 'bi bi-eye': !hidePassword}"></i>
             </button>
           </div>
+
+          <!-- Este botón permite al usuario alternar entre mostrar y ocultar la contraseña.
+              - (click)="hidePassword = !hidePassword" cambia el valor de hidePassword cada vez que se hace clic en el botón.
+              - [ngClass]="{'bi bi-eye-slash': hidePassword, 'bi bi-eye': !hidePassword}" cambia el ícono entre un ojo tachado y un ojo abierto, dependiendo del estado de visibilidad de la contraseña. -->
+
+
           <div *ngIf="registerForm.controls.password.errors && submitted" class="invalid-feedback">
             <div *ngIf="registerForm.controls.password.getError('onlyNumbers')">
               - Only numeric characters are allowed
@@ -42,6 +74,13 @@
               - The field is required
             </div>
           </div>
+
+          <!-- Este bloque muestra mensajes de error para el campo de contraseña.
+              - *ngIf="registerForm.controls.password.errors && submitted" asegura que los mensajes de error solo se muestren si hay errores y si el formulario ha sido enviado.
+               - registerForm.controls.password.getError('onlyNumbers'),
+               - registerForm.controls.password.getError('minlength'),
+               - registerForm.controls.password.getError('required') verifican errores específicos y muestran los mensajes correspondientes. -->
+
         </div>
       </div>
       <!-- Validación confirmar contraseña -->
@@ -51,12 +90,22 @@
           <input [type]="hidePasswordConfirmation ? 'password' : 'text'" class="form-control"
             [class.is-invalid]="(registerForm.controls.passwordConfirmation.errors || registerForm.errors) && submitted"
             formControlName="passwordConfirmation" />
+
+          <!-- Este es un campo de entrada para confirmar la contraseña.
+             - [type]="hidePasswordConfirmation ? 'password' : 'text'" alterna el tipo de entrada entre password (oculta) y text (visible), según el valor de hidePasswordConfirmation.
+             - [class.is-invalid] aplica la clase de Bootstrap is-invalid si hay errores en el campo de confirmación de contraseña o errores en el formulario y si el formulario ha sido enviado (submitted).
+             - formControlName="passwordConfirmation" vincula este campo con el control passwordConfirmation en tu FormGroup. -->
+
           <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button"
               (click)="hidePasswordConfirmation = !hidePasswordConfirmation">
               <i [ngClass]="{'bi bi-eye-slash': hidePasswordConfirmation, 'bi bi-eye': !hidePasswordConfirmation}"></i>
             </button>
           </div>
+          <!-- Este botón permite al usuario alternar entre mostrar y ocultar la confirmación de la contraseña.
+              - (click)="hidePasswordConfirmation = !hidePasswordConfirmation" cambia el valor de hidePasswordConfirmation con cada clic en el botón.
+              - [ngClass] cambia el ícono entre un ojo tachado y un ojo abierto, según el estado de visibilidad de la confirmación de la contraseña. -->
+
           <div *ngIf="(registerForm.controls.passwordConfirmation.errors || registerForm.errors) && submitted"
             class="invalid-feedback">
             <div *ngIf="registerForm.controls.passwordConfirmation.getError('required')">
@@ -66,6 +115,13 @@
               - The passwords must be equal
             </div>
           </div>
+
+          <!-- Este bloque muestra mensajes de error para el campo de confirmación de contraseña.
+              - Se muestran los mensajes de error si hay errores en el campo de confirmación de contraseña o errores en el formulario y si el formulario ha sido enviado.
+              - registerForm.controls.passwordConfirmation.getError('required') verifica si el campo es obligatorio.
+              - registerForm.getError('mustBeEqual') verifica si las contraseñas no coinciden. -->
+
+
         </div>
       </div>
 
@@ -84,5 +140,16 @@
         </li>
       </ul>
     </div>
+
+    <!-- El div con la clase users-list contiene la lista de usuarios registrados.
+           - *ngIf="formSubmittedSuccessfully" es una directiva estructural de Angular que hace que este div solo sea visible si formSubmittedSuccessfully es true. Esto significa que la lista solo se mostrará cuando se haya enviado con éxito al menos un formulario.
+           - Dentro de este div, hay un <h2> que proporciona un encabezado para la sección.
+           - El <ul> contiene una lista (<li>) de usuarios registrados.
+           - *ngFor="let user of registredUsers" es una directiva estructural que repite el elemento <li> para cada usuario en el array registredUsers.
+           - {{ user.email }} y {{ user.password }} son interpolaciones que muestran el correo electrónico y la contraseña de cada usuario registrado.
+           - En resumen, esta sección de tu formulario muestra una lista de usuarios que se  -->
+
+
+
   </div>
 </div>
